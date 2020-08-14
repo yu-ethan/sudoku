@@ -1,16 +1,5 @@
+import copy
 class Board:
-
-    # board = [
-    #     [3, 2, 7, 0, 9, 0, 0, 0, 0],
-    #     [8, 6, 0, 5, 0, 7, 3, 4, 9],
-    #     [4, 0, 0, 0, 0, 1, 6, 0, 2],
-    #     [2, 0, 6, 1, 8, 9, 0, 5, 0],
-    #     [0, 0, 4, 7, 6, 2, 9, 0, 0],
-    #     [0, 1, 0, 0, 4, 5, 2, 6, 8],
-    #     [1, 0, 0, 4, 5, 0, 8, 0, 0],
-    #     [6, 0, 0, 0, 0, 8, 5, 0, 0],
-    #     [9, 5, 0, 2, 0, 3, 4, 0, 6]
-    # ]
 
     #evil sudoku
     board = [
@@ -73,12 +62,37 @@ class Board:
         self.board[row][col] = 0
         return False
     
+    def set_zero(self, row, col):
+        self.board[row][col] = 0
+    
+    #modified solve function for generator use to find unique boards
+    #added constraint that at specific row, col cannot be solved with num
+    #if it still can solve, then that means board is not unique and solved with another num
+    def unique_solve(self, row, col, num):
+        bcopy = copy.deepcopy(self.board)
+        unique = True
+        for i in range(1, 10):
+            if i != num:
+                if self.valid(row, col, i):
+                    if self.solve():
+                        unique = False
+        if unique == False:
+            self.board = bcopy
+        return unique
+            
+    def number_empty(self):
+        zeros = 0
+        for row in range(self.rows):
+            zeros += self.board[row].count(0)
+        return zeros
+    
     def print_board(self):
         for y in range(self.rows):
             print(self.board[y])
 
-
-b = Board()
-b.solve()
-b.print_board()
+if __name__ == "__main__":
+    b = Board()
+    print(b.number_empty())
+    b.solve()
+    b.print_board()
 
