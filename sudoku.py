@@ -47,9 +47,6 @@ class Board:
             if not self.unique_solve(row, col, temp):
                 self.board[row][col] = temp
             
-        
-
-
     def valid(self, row, col, num):
         #checking if valid in row
         for x in range(self.columns):
@@ -121,6 +118,16 @@ class Board:
     def print_board(self):
         for y in range(self.rows):
             print(self.board[y])
+    
+    def generate_new(self):
+        self.ans_board.clear()
+        self.board.clear()
+        self.starting_board.clear()
+        self.generate_board()
+    
+    def reset_board(self):
+        self.board.clear()
+        self.board = copy.deepcopy(self.starting_board)
 
 #uses a stack to eliminate chance of random selection of same coords
 def rand_coords_list():
@@ -130,9 +137,3 @@ def rand_coords_list():
             stack.append([i,j])
     random.shuffle(stack)
     return stack
-
-if __name__ == "__main__":
-    b = Board()
-    b.generate_board()
-    b.print_board()
-
