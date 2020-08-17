@@ -3,6 +3,7 @@ from sudoku import Board
 pygame.init()
 
 WHITE = (255, 255, 255)
+LIGHT_BLUE = (0, 166, 255)
 BLUE = (53, 92, 226)
 RED = (255, 0, 0)
 WIDTH = 800
@@ -64,12 +65,14 @@ def draw_numbers(grid, surface, valid):
                         num_rect = num.get_rect(center=(x, y))
                         surface.blit(num, num_rect)
                     else:
-                        num = number_font.render(str(grid.board[i][j]), True, WHITE)
+                        color = determine_color(grid, i, j)
+                        num = number_font.render(str(grid.board[i][j]), True, color)
                         num_rect = num.get_rect(center=(x, y))
                         surface.blit(num, num_rect)
 
                 else:
-                    num = number_font.render(str(grid.board[i][j]), True, WHITE)
+                    color = determine_color(grid, i, j)
+                    num = number_font.render(str(grid.board[i][j]), True, color)
                     num_rect = num.get_rect(center=(x, y))
                     surface.blit(num, num_rect)
 
@@ -81,12 +84,20 @@ def highlighted_box(coords):
 def enter_val(grid, value, coords):
     row = (coords[1]-B_START_HEIGHT)//SQ_SIZE
     col = (coords[0]//SQ_SIZE)-1
-    grid.set_val(row, col, value)
+    if grid.starting_board[row][col] == 0:
+        grid.set_val(row, col, value)
 
 def del_entry(grid, coords):
     row = (coords[1]-B_START_HEIGHT)//SQ_SIZE
     col = (coords[0]//SQ_SIZE)-1
-    grid.set_zero(row, col)
+    if grid.starting_board[row][col] == 0:
+        grid.set_zero(row, col)
+
+def determine_color(grid, row, col):
+    if grid.board[row][col] == grid.starting_board[row][col]:
+        return WHITE
+    else:
+        return LIGHT_BLUE
 
 def main():
     b = Board()
